@@ -263,7 +263,7 @@ class PraxisMap extends Component {
   _handleMapClick = async (event) => {
     const { hoveredFeature } = this.props.currentFeature
     if (hoveredFeature) {
-      const [markerLongitude, markerLatitude] = event.lngLat
+      const { lng: markerLongitude, lat: markerLatitude } = event.lngLat
 
       // set the marker based on event feature coords
       this.props.dispatch(
@@ -348,6 +348,7 @@ class PraxisMap extends Component {
             this._handleToggleLoadingIndicator(false)
           }}
           onMouseOut={() => this._removeTooltip()}
+          cursor={hoveredFeature ? "pointer" : "auto"}
         >
           {latitude && longitude ? (
             <PraxisMarker
