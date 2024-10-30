@@ -79,7 +79,7 @@ function useSpeculationByCode(results, { code, year }) {
   return { data, topCount, topPer }
 }
 
-function useCodesBySpeculator({ code, ownid, year }) {
+function useCodesBySpeculator({ ownid, year }) {
   const [speculatorData, setSpeculatorData] = useState(null)
   const [propCount, setPropCount] = useState(null)
   const [zipsBySpeculator, setZipsBySpeculator] = useState(null)
@@ -92,18 +92,16 @@ function useCodesBySpeculator({ code, ownid, year }) {
 
   useEffect(() => {
     ;(async () => {
-      if (code) {
-        const route = `/api/detailed-search?type=codes-by-speculator&ownid=${ownid}&year=${year}`
-        const data = await APISearchQueryFromRoute(route)
-        setSpeculatorData(data)
+      const route = `/api/detailed-search?type=codes-by-speculator&ownid=${ownid}&year=${year}`
+      const data = await APISearchQueryFromRoute(route)
+      setSpeculatorData(data)
 
-        const { propCount, speculatorZips } = calulateSpeculatorTotals(data)
-        setPropCount(propCount)
-        setZipsBySpeculator(speculatorZips)
-      }
+      const { propCount, speculatorZips } = calulateSpeculatorTotals(data)
+      setPropCount(propCount)
+      setZipsBySpeculator(speculatorZips)
     })()
     return () => null
-  }, [ownid, year, code])
+  }, [ownid, year])
 
   return { speculatorData, propCount, zipsBySpeculator }
 }
@@ -289,12 +287,12 @@ function DumbPaginator({ data, itemsPerPage = 10, queryParams, children }) {
   data properties, ids, and data return type (details type) are. 
   They also use internal state in most cases. */
 function ContentSwitch({ detailsType, queryParams }) {
-  const { results, resultsType } = useSelector(
+  const { results, resultsCount, resultsType } = useSelector(
     (state) => state.searchState.detailedSearch
   )
 
   // TODO: Don't worry as much about single vs multiple
-  if (results && results.length > 0 && resultsType) {
+  if (results && resultsCount > 0 && resultsType) {
     switch (detailsType) {
       case "parcels-by-geocode:single-parcel":
         return <SingleParcel result={results[0]} queryParams={queryParams} />
@@ -416,13 +414,11 @@ function CodeParcels(props) {
 function SpeculatorParcels(props) {
   const { ownid, year } = props.queryParams
 
-  const { drawerIsOpen, results } = useSelector(
+  const { drawerIsOpen } = useSelector(
     (state) => state.searchState.detailedSearch
   )
-  const code = results[0].properties.propzip // need some error handling
 
   const { speculatorData, propCount, zipsBySpeculator } = useCodesBySpeculator({
-    code,
     ownid,
     year,
   })

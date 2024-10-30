@@ -220,7 +220,7 @@ export function flattenPrimaryResults(primaryResults) {
 
 // Hacking this a bit to handle different response types
 export function getDetailsFromGeoJSON(geojson) {
-  if (geojson?.type === "FeatureCollection") {
+  if (geojson?.type === "FeatureCollection" && geojson?.features?.length > 0) {
     const details = geojson.features.map((feature) => {
       const { centroid, properties } = feature
       return { centroid, properties }
@@ -238,6 +238,13 @@ export function getDetailsFromGeoJSON(geojson) {
       details: [],
       detailsZip: geojson.code,
       detailsCount: +geojson.count,
+      detailsType: geojson.praxisDataType,
+    }
+  } else if (geojson?.praxisDataType) {
+    return {
+      details: [],
+      detailsZip: geojson.code || null,
+      detailsCount: geojson.count,
       detailsType: geojson.praxisDataType,
     }
   } else {
