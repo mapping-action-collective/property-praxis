@@ -50,7 +50,14 @@ export default function searchState(state = initialSearchState, action) {
     case UPDATE_SEARCH_PARAMS:
       return {
         ...state,
-        searchParams: { ...state.searchParams, ...action.payload },
+        searchParams: {
+          ...state.searchParams,
+          ...action.payload,
+          searchYear:
+            state.searchParams.searchYear ||
+            action.payload.searchYear ||
+            DEFAULT_YEAR,
+        },
       }
     case UPDATE_PRIMARY_SEARCH:
       return {

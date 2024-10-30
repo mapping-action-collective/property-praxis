@@ -23,9 +23,6 @@ export function URLParamsToSearchParams(searchQuery) {
     case "address":
       searchTerm = place
       break
-    default:
-      console.error(`Unkown search type:${searchType}`)
-      break
   }
 
   return {

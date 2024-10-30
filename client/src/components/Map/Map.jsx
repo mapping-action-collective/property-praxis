@@ -434,7 +434,11 @@ class PraxisMap extends Component {
               </div>
             </Popup>
           )}
-          <Source id="zips" type="geojson" data={zips}>
+          <Source
+            id="zips"
+            type="geojson"
+            data={zips || { type: "FeatureCollection", features: [] }}
+          >
             <Layer key="zips-layer" {...zipsLayer} />
             <Layer key="zips-label" {...zipsLabel} />
           </Source>

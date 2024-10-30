@@ -56,7 +56,7 @@ export function createFilterFromParams(params) {
   if (layerFilter.length > 0) {
     return ["all", ...layerFilter]
   } else {
-    return ["none"]
+    return ["all"]
   }
 }
 
