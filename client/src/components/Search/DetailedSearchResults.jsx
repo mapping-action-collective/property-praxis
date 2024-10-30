@@ -690,6 +690,7 @@ function SingleParcel(props) {
               {`Properties owned by ${capitalizeFirstLetter(own_id)}`}
             </span>
           </Link>
+          {/* TODO: what is this? */}
           {praxisRecordYears
             ? praxisRecordYears.map((year, index) => {
                 return (
@@ -714,6 +715,8 @@ function SingleParcel(props) {
               })
             : null}
         </div>
+        {/* TODO: Integrate this better */}
+        <TimeGraph ownid={own_id} />
       </div>
     </div>
   )
