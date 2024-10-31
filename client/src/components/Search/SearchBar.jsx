@@ -202,6 +202,10 @@ class SearchBar extends Component {
 
   _handleYearSelect = (e) => {
     this.props.dispatch(updateSearchParams({ searchYear: e.target.value }))
+    // Update query parameters on year update to trigger re-query
+    const params = new URLSearchParams(this.props.router?.location?.search)
+    params.set("year", e.target.value)
+    this.props.router?.navigate(`/map?${params}`)
   }
 
   componentDidMount() {
