@@ -202,11 +202,15 @@ async function queryPGDB({
               ST_SetSRID(
                 ST_MakePoint(${longitude}, ${latitude}),
               4326)::geography,
-            centroid::geography) AS distance
+            geom::geography) AS distance,
+            ST_Contains(
+              geom,
+              ST_SetSRID(ST_MakePoint(${longitude}, ${latitude}), 4326)
+            ) AS inside
           FROM parcels
           WHERE year = ${year}
           AND propzip LIKE ${zipMatch}
-          ORDER BY parcels.centroid <-> ST_SetSRID(ST_MakePoint(${longitude}, ${latitude}), 4326)::geography
+          ORDER BY parcels.geom <-> ST_SetSRID(ST_MakePoint(${longitude}, ${latitude}), 4326)
           LIMIT 1;`
         break
 

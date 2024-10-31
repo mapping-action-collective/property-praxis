@@ -46,11 +46,12 @@ router.get("/", async (req, res) => {
             properties,
           }))
           .filter(
-            ({ properties: { propaddr } }) =>
+            ({ properties: { propaddr, inside } }) =>
               !!place &&
-              +place.split(" ")[0] === +propaddr.split(" ")[0] &&
-              place.split(" ")[1].toUpperCase() ===
-                propaddr.split(" ")[1].toUpperCase() // TODO: Might be too strict
+              (inside ||
+                (+place.split(" ")[0] === +propaddr.split(" ")[0] &&
+                  place.split(" ")[1].toUpperCase() ===
+                    propaddr.split(" ")[1].toUpperCase())) // TODO: Might be too strict
           )
         let nearbyAddresses = []
 
