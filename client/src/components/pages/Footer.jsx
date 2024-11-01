@@ -3,7 +3,7 @@ import { Link } from "react-router-dom"
 import { useSelector, useDispatch } from "react-redux"
 import { triggerFetchError } from "../../actions/redirect"
 import { getYearString } from "../../utils/helper"
-import macLogoTransparent from "../../assets/img/mac_logo_transparent.png"
+import detroitographyLogo from "../../assets/img/detroitography_logo.png"
 
 const Footer = () => {
   const { isFetchError } = useSelector((state) => state.redirect)
@@ -19,18 +19,15 @@ const Footer = () => {
     <div>
       <footer>
         <div className="footer-container">
-          <div>&#169; {getYearString()} | Urban Praxis</div>
+          <div>&#169; {getYearString()} | Property Praxis</div>
           <div>
             <div>A project in collaboration with</div>
             <a
-              href="https://mappingaction.org"
+              href="https://detroitography.com/"
               target="_blank"
               rel="noopener noreferrer"
             >
-              <img
-                src={macLogoTransparent}
-                alt="Mapping Action Collective Logo"
-              ></img>
+              <img src={detroitographyLogo} alt="Detroitography Logo"></img>
             </a>
           </div>
           <div className="footer-links">
