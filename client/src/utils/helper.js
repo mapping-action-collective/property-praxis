@@ -187,7 +187,6 @@ export function createQueryStringFromParams(
       break
     default:
       qs = null
-      console.error(`Unkown API search type: ${type}`)
       break
   }
 

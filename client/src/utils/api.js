@@ -14,7 +14,7 @@ export async function APIQueryStringFromSearchParams(
   route
 ) {
   try {
-    if (searchTerm === "") {
+    if (searchTerm === "" || searchType === null) {
       return []
     }
     let qs
@@ -59,6 +59,8 @@ export async function APIQueryStringFromSearchParams(
 }
 
 export async function APISearchQueryFromRoute(route) {
+  if (route === null) return
+
   try {
     const respose = await fetch(route)
     const json = await respose.json()
