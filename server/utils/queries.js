@@ -48,7 +48,7 @@ async function queryPGDB({
     }
 
     const zipMatch = `%${code}%`
-    const ownIdMatch = `%${decodeURI(ownid).toUpperCase()}%`
+    const ownIdMatch = `%${decodeURI(ownid)}%`
 
     /* eslint-disable no-case-declarations */
     switch (PGDBQueryType) {
