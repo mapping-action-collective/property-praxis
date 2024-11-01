@@ -35,7 +35,6 @@ async function queryPGDB({
   coordinates = null,
   parcelno = null,
   year = null,
-  q = null,
 }) {
   try {
     let query, longitude, latitude
