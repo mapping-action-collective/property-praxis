@@ -566,17 +566,14 @@ function SingleParcel(props) {
     propaddr,
     count,
     parcelno,
-    parprop_id, // this is the PK for geoms in DB
   } = props.result.properties
 
   // other years to search for this address
   const praxisRecordYears = availablePraxisYears(recordYears, searchYear)
 
   useEffect(() => {
-    if (parprop_id) {
-      const route = `/api/detailed-search?type=detailed-record-years&parpropid=${parprop_id}&year=${searchYear}`
-      dispatch(handleGetPraxisYearsAction(route))
-    }
+    const route = `/api/detailed-search?type=detailed-record-years&parcelno=${parcelno}&year=${searchYear}`
+    dispatch(handleGetPraxisYearsAction(route))
     return () => null
   }, [dispatch, searchCoordinates])
 
@@ -690,32 +687,11 @@ function SingleParcel(props) {
               {`Properties owned by ${capitalizeFirstLetter(own_id)}`}
             </span>
           </Link>
-          {/* TODO: what is this? */}
-          {praxisRecordYears
-            ? praxisRecordYears.map((year, index) => {
-                return (
-                  <Link
-                    key={`${year}-${index}`}
-                    to={createQueryStringFromParams(
-                      {
-                        type: "address",
-                        place: searchTerm,
-                        coordinates: searchCoordinates,
-                        year,
-                      },
-                      "/map"
-                    )}
-                  >
-                    <span title={`Search this property's record for ${year}.`}>
-                      <img src={infoIcon} alt="More Information"></img>
-                      {` ${year} property record`}
-                    </span>
-                  </Link>
-                )
-              })
-            : null}
         </div>
-        {/* TODO: Integrate this better */}
+        <div className="detailed-title">
+          <img src={mapMarkerRose} alt="Map marker icon" />
+          <span> {own_id} properties</span>
+        </div>
         <TimeGraph ownid={own_id} />
       </div>
     </div>

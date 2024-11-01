@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from "react"
 import { APISearchQueryFromRoute } from "../../utils/api"
-import { VictoryChart, VictoryLine, VictoryTheme } from "victory"
+import {
+  VictoryChart,
+  VictoryLine,
+  VictoryTheme,
+  VictoryTooltip,
+} from "victory"
 
 function TimeGraph({ ownid }) {
   const [data, setData] = useState(null)
@@ -22,8 +27,13 @@ function TimeGraph({ ownid }) {
     return () => null
   }, [ownid])
 
+  // TODO: Tooltip only on mouseover
   return (
-    <VictoryChart theme={VictoryTheme.material} scale={{ x: "time" }}>
+    <VictoryChart
+      theme={VictoryTheme.material}
+      labelComponent={<VictoryTooltip />}
+      labels={({ datum, active }) => (active ? datum.label : null)}
+    >
       <VictoryLine
         style={{
           data: { stroke: "#e4002c" },
