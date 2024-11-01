@@ -49,9 +49,9 @@ router.get("/", async (req, res) => {
             ({ properties: { propaddr, inside } }) =>
               !!place &&
               (inside ||
-                (+place.split(" ")[0] === +propaddr.split(" ")[0] &&
+                (+place.split(" ")[0] === +(propaddr || "").split(" ")[0] &&
                   place.split(" ")[1].toUpperCase() ===
-                    propaddr.split(" ")[1].toUpperCase())) // TODO: Might be too strict
+                    (propaddr || "").split(" ")[1].toUpperCase())) // TODO: Might be too strict
           )
         let nearbyAddresses = []
 
@@ -131,16 +131,6 @@ router.get("/", async (req, res) => {
         geoJSON = pgData.data[0].jsonb_build_object
         clientData = checkEmptyGeoJSON(geoJSON)
         praxisDataType = "parcels-by-speculator-code"
-        break
-
-      case "zipcode-all": // this shoudl be reowrked to hanlde "codes"
-        pgData = await queries.queryPGDB({
-          PGDBQueryType: queries.GEOJSON_ZIPCODES,
-        })
-
-        geoJSON = pgData.data[0].jsonb_build_object
-        clientData = checkEmptyGeoJSON(geoJSON)
-        praxisDataType = "zipcode-all"
         break
 
       case "zipcode-intersect": // this should be reowrked to hanlde "codes"

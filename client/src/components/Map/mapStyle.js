@@ -47,8 +47,12 @@ export const parcelHighlightLayer = {
   buffer: 0,
   tolerance: 0.9,
   paint: {
-    "fill-color": "rgba(0,0,0,0.4)",
-    "fill-opacity": 1,
+    "fill-color": [
+      "case",
+      ["boolean", ["feature-state", "hover"], false],
+      "rgba(0,0,0,0.4)",
+      "rgba(0,0,0,0)",
+    ],
     "fill-outline-color": "rgba(0,0,0,1)",
   },
 }

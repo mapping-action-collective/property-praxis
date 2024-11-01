@@ -8,19 +8,12 @@ search groups. */
 
 router.get("/", async (req, res) => {
   try {
-    const { type = null, q = null, year = null, code = null } = req.query
+    const { type = null, year = null, code = null } = req.query
     let pgData, clientData
     switch (type) {
       case "available-praxis-years":
         pgData = await queries.queryPGDB({
           PGDBQueryType: queries.AVAILABLE_PRAXIS_YEARS,
-        })
-        clientData = pgData.data
-        break
-      case "sql-general":
-        pgData = await queries.queryPGDB({
-          q,
-          PGDBQueryType: queries.SQL_QUERY_GENERAL,
         })
         clientData = pgData.data
         break

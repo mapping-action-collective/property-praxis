@@ -53,6 +53,9 @@ export default function searchState(state = initialSearchState, action) {
         searchParams: {
           ...state.searchParams,
           ...action.payload,
+          searchType:
+            action.payload.searchType ||
+            initialSearchState.searchParams.searchType,
           searchYear:
             action.payload.searchYear ||
             state.searchParams.searchYear ||

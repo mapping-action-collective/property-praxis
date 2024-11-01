@@ -21,7 +21,6 @@ const POINT_CODE = "POINT_CODE" // get the zipcode for a specific point
 const SPECULATION_BY_CODE = "SPECULATION_BY_CODE"
 const SPECULATION_BY_OWNID = "SPECULATION_BY_OWNID"
 const SPECULATOR_BY_YEAR = "SPECULATOR_BY_YEAR" //graph data
-const SQL_QUERY_GENERAL = "SQL_QUERY_GENERAL"
 const ZIPCODE_PARCEL_COUNT = "ZIPCODE_PARCEL_COUNT"
 
 /*Mapbox API query types*/
@@ -345,10 +344,6 @@ async function queryPGDB({
 
         break
 
-      case SQL_QUERY_GENERAL:
-        query = q
-        break
-
       default:
         console.error(`Unknown SQL query type: ${PGDBQueryType}`)
         break
@@ -429,6 +424,5 @@ module.exports = {
   SPECULATION_BY_CODE,
   SPECULATION_BY_OWNID,
   SPECULATOR_BY_YEAR,
-  SQL_QUERY_GENERAL,
   ZIPCODE_PARCEL_COUNT,
 }

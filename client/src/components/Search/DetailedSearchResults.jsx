@@ -6,7 +6,6 @@ import {
   handleGetPraxisYearsAction,
   updateDetailedSearch,
 } from "../../actions/search"
-import { setHighlightFeaturesAction } from "../../actions/currentFeature"
 import {
   capitalizeFirstLetter,
   createQueryStringFromParams,
@@ -109,22 +108,11 @@ function useCodesBySpeculator({ ownid, year }) {
 /*Specific Link components to pass to  paginator component*/
 function SpeculatorLink({ record, queryParams }) {
   const { code, year } = queryParams
-  const dispatch = useDispatch()
-
-  const highlightFeatures = (ids) => {
-    dispatch(setHighlightFeaturesAction(ids))
-  }
-  const removeHighlightFeatures = () => {
-    dispatch(setHighlightFeaturesAction([""]))
-  }
 
   return (
     <div className="zipcode-item">
       <div>
         <Link
-          onMouseOver={() => highlightFeatures(record.featureIds)}
-          onMouseOut={() => removeHighlightFeatures()}
-          onClick={() => removeHighlightFeatures()}
           to={createQueryStringFromParams(
             {
               type: "zipcode",
@@ -156,21 +144,11 @@ function SpeculatorLink({ record, queryParams }) {
 
 function ZipcodeLink({ record, index, queryParams }) {
   const { ownid, year } = queryParams
-  const dispatch = useDispatch()
-  const highlightFeatures = (ids) => {
-    dispatch(setHighlightFeaturesAction(ids))
-  }
-  const removeHighlightFeatures = () => {
-    dispatch(setHighlightFeaturesAction([""]))
-  }
 
   return (
     <div className="speculator-item" key={`${record.own_id}-${index}`}>
       <div>
         <Link
-          onMouseOver={() => highlightFeatures(record.featureIds)}
-          onMouseOut={() => removeHighlightFeatures()}
-          onClick={() => removeHighlightFeatures()}
           to={createQueryStringFromParams(
             {
               type: "speculator",
@@ -202,22 +180,11 @@ function ZipcodeLink({ record, index, queryParams }) {
 function AddressLink({ index, record, queryParams }) {
   const { code, year } = queryParams
   const { centroid } = record
-  const { propaddr, prop_id } = record.properties
-
-  const dispatch = useDispatch()
-  const highlightFeatures = (id) => {
-    dispatch(setHighlightFeaturesAction(id))
-  }
-  const removeHighlightFeatures = () => {
-    dispatch(setHighlightFeaturesAction([""]))
-  }
+  const { propaddr } = record.properties
 
   return (
     <div className="address-item" key={index}>
       <Link
-        onMouseOver={() => highlightFeatures([prop_id])}
-        onMouseOut={() => removeHighlightFeatures()}
-        onClick={() => removeHighlightFeatures()}
         to={createQueryStringFromParams(
           {
             type: "address",

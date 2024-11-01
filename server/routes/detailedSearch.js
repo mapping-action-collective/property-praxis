@@ -13,6 +13,7 @@ router.get("/", async (req, res) => {
       })
       clientData = data.map(({ year }) => year)
     } else if (type === "speculators-by-code") {
+      // TODO: Unused
       const { data } = await queries.queryPGDB({
         PGDBQueryType: queries.SPECULATORS_BY_CODE,
         code,
@@ -37,6 +38,7 @@ router.get("/", async (req, res) => {
 
       clientData = data
     } else if (type === "speculation-by-ownid") {
+      // TODO: unused
       const { data } = await queries.queryPGDB({
         PGDBQueryType: queries.SPECULATION_BY_OWNID,
         ownid,

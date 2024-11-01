@@ -3,7 +3,7 @@ import PropTypes from "prop-types"
 import ReactMapGL, { Source, Layer, Marker, Popup } from "react-map-gl"
 // import ParcelLayerController from "./ParcelLayerController";
 import BasemapController from "./BasemapController"
-import { createNewViewport } from "../../utils/map"
+import { createNewViewport, getTileLayer } from "../../utils/map"
 import {
   capitalizeFirstLetter,
   parseMBAddressString,
@@ -16,10 +16,7 @@ import {
   getMapStateAction,
   toggleLoadingIndicatorAction,
 } from "../../actions/mapState"
-import {
-  getHoveredFeatureAction,
-  setHighlightFeaturesAction,
-} from "../../actions/currentFeature"
+import { getHoveredFeatureAction } from "../../actions/currentFeature"
 import {
   logMarkerDragEventAction,
   onMarkerDragEndAction,
@@ -150,6 +147,7 @@ class PraxisMap extends Component {
   ]
 
   mapRef = React.createRef()
+  mapRefDidUpdate = false
 
   // _stops = [
   //   [1, "#f6d2a9;"],
@@ -224,6 +222,29 @@ class PraxisMap extends Component {
     const hoveredFeature =
       features && features.find((f) => f.layer.id === "parcel-polygon")
 
+    if (hoveredFeature) {
+      this.mapRef.current?.setFeatureState(
+        {
+          source: "parcels",
+          sourceLayer: "parcels",
+          id: hoveredFeature.id,
+        },
+        { hover: true }
+      )
+    }
+    if (
+      this.props.currentFeature?.hoveredFeature?.id &&
+      this.props.currentFeature?.hoveredFeature?.id !== hoveredFeature?.id
+    ) {
+      this.mapRef.current?.setFeatureState(
+        {
+          source: "parcels",
+          sourceLayer: "parcels",
+          id: this.props.currentFeature.hoveredFeature.id,
+        },
+        { hover: false }
+      )
+    }
     this.props.dispatch(
       getHoveredFeatureAction({
         hoveredFeature,
@@ -232,11 +253,6 @@ class PraxisMap extends Component {
         lngLat,
       })
     )
-    if (hoveredFeature) {
-      this.props.dispatch(setHighlightFeaturesAction([hoveredFeature.id]))
-    } else {
-      this.props.dispatch(setHighlightFeaturesAction([""]))
-    }
   }
 
   _renderTooltip() {
@@ -302,6 +318,11 @@ class PraxisMap extends Component {
   }
 
   componentDidUpdate(prevProps) {
+    if (!this.mapRefDidUpdate && this.mapRef?.current !== null) {
+      this.mapRef.current.getMap()?.touchZoomRotate?.disableRotation()
+      this.mapRef.current.resize() // Force a resize in case missed
+      this.mapRefDidUpdate = true
+    }
     // if the location changes, query for new data
     if (
       this.props.router?.location?.search !== prevProps.router?.location?.search
@@ -313,7 +334,7 @@ class PraxisMap extends Component {
   render() {
     //create the new viewport before rendering
     const { latitude, longitude } = this.props.mapData.marker
-    const { highlightIds, hoveredFeature, lngLat } = this.props.currentFeature
+    const { hoveredFeature, lngLat } = this.props.currentFeature
     const { zips } = this.props.mapData
     const { basemapLayer } = this.props.controller
     const { sliderValue } = this.props.controller
@@ -337,6 +358,7 @@ class PraxisMap extends Component {
           maxZoom={18}
           mapboxAccessToken={MAPBOX_TOKEN}
           onMove={this._onViewportChange}
+          touchPitch={false}
           // TODO:
           // onViewportChange={this._onViewportChange}
           interactiveLayerIds={["parcel-polygon"]}
@@ -366,17 +388,13 @@ class PraxisMap extends Component {
               <Arrow compassAngle={bearing} />
             </Marker>
           ) : null}
-          {/* TODO: Clean up */}
           <Source
             id="parcels-centroids"
             type="vector"
-            tiles={[
-              `https://property-praxis-dev-assets.s3.amazonaws.com/tiles/dev/parcels-centroids-${searchYear}/{z}/{x}/{y}.pbf`,
-            ]}
+            tiles={[getTileLayer("parcels-centroids", searchYear)]}
             minzoom={8}
             maxzoom={13}
           >
-            {/* <Source id="parcels" type="geojson" data={ppraxis}> */}
             <Layer
               key="parcel-centroid"
               {...parcelCentroid}
@@ -394,9 +412,7 @@ class PraxisMap extends Component {
           <Source
             id="parcels"
             type="vector"
-            tiles={[
-              `https://property-praxis-dev-assets.s3.amazonaws.com/tiles/dev/parcels-${searchYear}/{z}/{x}/{y}.pbf`,
-            ]}
+            tiles={[getTileLayer("parcels", searchYear)]}
             minzoom={13}
             maxzoom={14}
           >
@@ -412,11 +428,7 @@ class PraxisMap extends Component {
               }}
               filter={parcelLayerFilter}
             />
-            <Layer
-              key="highlight-parcel-layer"
-              {...parcelHighlightLayer}
-              filter={["in", "id", ...(highlightIds || [])]} // hightlight can be an array or string
-            />
+            <Layer key="highlight-parcel-layer" {...parcelHighlightLayer} />
           </Source>
 
           {hoveredFeature && (
