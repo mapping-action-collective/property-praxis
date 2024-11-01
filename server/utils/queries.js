@@ -34,7 +34,7 @@ async function queryPGDB({
   code = null,
   ownid = null,
   coordinates = null,
-  parpropid = null,
+  parcelno = null,
   year = null,
   q = null,
 }) {
@@ -233,8 +233,8 @@ async function queryPGDB({
       case DETAILED_RECORD_YEARS:
         query = SQL`SELECT
           DISTINCT year
-          FROM property
-          WHERE prop_id = ${parpropid}`
+          FROM parcels
+          WHERE parcelno = ${parcelno}`
         break
 
       // all the years in the DB to search
