@@ -74,7 +74,7 @@ jobs:
 
   deploy:
     needs: [client, server]
-    if: github.repository_owner == 'PropertyPraxis' && (github.ref == 'refs/heads/production' || github.ref == 'refs/heads/development') && github.event_name == 'push'
+    if: github.repository_owner == 'PropertyPraxis' && (github.ref == 'refs/heads/production') && github.event_name == 'push'
     runs-on: ubuntu-latest
 
     env:
