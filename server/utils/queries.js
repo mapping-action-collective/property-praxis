@@ -46,7 +46,7 @@ async function queryPGDB({
     }
 
     const zipMatch = `%${code}%`
-    const ownIdMatch = `%${decodeURI(ownid)}%`
+    const ownIdMatch = `%${decodeURI(ownid)}%`.toUpperCase()
 
     /* eslint-disable no-case-declarations */
     switch (PGDBQueryType) {
@@ -338,7 +338,7 @@ async function queryPGDB({
           ON tp.tp_id = tpp.tp_id
           INNER JOIN year AS y 
           ON tpp.taxparprop_id = y.taxparprop_id
-          WHERE ot.own_id = ${ownid}
+          WHERE ot.own_id = ${ownid.toUpperCase()}
           GROUP BY ot.own_id, y.year`
 
         break

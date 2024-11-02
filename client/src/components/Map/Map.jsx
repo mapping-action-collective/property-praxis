@@ -425,6 +425,7 @@ class PraxisMap extends Component {
                   stops: this._stops,
                 },
                 "fill-opacity": sliderValue / 100,
+                "fill-outline-color": "rgba(0,0,0,0.75)",
               }}
               filter={parcelLayerFilter}
             />

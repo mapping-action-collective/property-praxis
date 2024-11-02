@@ -19,14 +19,27 @@ export function setDocHeightOnWindow() {
 }
 
 export function capitalizeFirstLetter(string) {
-  if ((string === null) | (string === undefined)) return null
+  if (string === null || string === undefined) return null
   const lowerString = string.toLowerCase()
-  const strArray = lowerString.split(" ")
-  const capitalizedStrArray = strArray.map((val) => {
-    return val.charAt(0).toUpperCase() + val.slice(1)
-  })
+  let capitalizeNext = true // Indicates if the next character should be capitalized
+  let result = ""
 
-  return capitalizedStrArray.join(" ")
+  for (let i = 0; i < lowerString.length; i++) {
+    const char = lowerString[i]
+
+    if (capitalizeNext && /[a-zA-Z]/.test(char)) {
+      result += char.toUpperCase()
+      capitalizeNext = false // Reset until the next space or quote
+    } else {
+      result += char
+    }
+
+    if (char === " " || char === '"') {
+      capitalizeNext = true
+    }
+  }
+
+  return result
 }
 
 export function createAddressString({ propno, propdir, propstr }) {

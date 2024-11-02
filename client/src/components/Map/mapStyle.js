@@ -53,7 +53,6 @@ export const parcelHighlightLayer = {
       "rgba(0,0,0,0.4)",
       "rgba(0,0,0,0)",
     ],
-    "fill-outline-color": "rgba(0,0,0,1)",
   },
 }
 
