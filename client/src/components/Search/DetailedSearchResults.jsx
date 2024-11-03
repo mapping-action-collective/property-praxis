@@ -15,7 +15,6 @@ import {
   availablePraxisYears,
   paginator,
 } from "../../utils/helper"
-// import MapViewer from "./MapViewer";
 import MapViewerV4 from "./MapViewerV4"
 import TimeGraph from "./TimeGraph"
 import infoIcon from "../../assets/img/info-icon.png"
@@ -449,13 +448,6 @@ function MultipleParcels(props) {
   if (speculatorData) {
     return (
       <div className="results-inner scroller">
-        {/* <MapViewer searchState={searchState} dispatch={dispatch} /> */}
-        <MapViewerV4 searchState={searchState} dispatch={dispatch} />
-        {/* <MapViewerV4
-          accessToken={"MLY|4790260297730810|2c2446b85cd5a589a6e1cd43aa3b3525"}
-          imageId={"498763468214164"}
-          style={{ width: "100%", height: "300px" }}
-        /> */}
         <div style={drawerIsOpen ? { display: "block" } : { display: "none" }}>
           <div className="detailed-title">
             <img src={mapMarkerRose} alt="A map marker icon" />
@@ -476,6 +468,7 @@ function MultipleParcels(props) {
               properties we have on record for this zip code.
             </p>
           </div>
+          <MapViewerV4 searchState={searchState} dispatch={dispatch} />
           <div className="detailed-title">
             <img src={questionMarkRose} alt="A question mark icon" />
             <span> Top 10 Speculators in {`${resultsZip}`}</span>
@@ -546,13 +539,6 @@ function SingleParcel(props) {
 
   return (
     <div className="results-inner scroller">
-      {/* <MapViewer searchState={searchState} dispatch={dispatch} /> */}
-      <MapViewerV4 searchState={searchState} dispatch={dispatch} />
-      {/* <MapViewerV4
-        accessToken={"MLY|4790260297730810|2c2446b85cd5a589a6e1cd43aa3b3525"}
-        imageId={"498763468214164"}
-        style={{ width: "100%", height: "300px" }}
-      /> */}
       <div style={drawerIsOpen ? { display: "block" } : { display: "none" }}>
         <div className="detailed-title">
           <img src={mapMarkerRose} alt="A map marker icon" />
@@ -655,6 +641,7 @@ function SingleParcel(props) {
             </span>
           </Link>
         </div>
+        <MapViewerV4 searchState={searchState} dispatch={dispatch} />
         <div className="detailed-title">
           <img src={mapMarkerRose} alt="Map marker icon" />
           <span> {own_id} properties</span>
