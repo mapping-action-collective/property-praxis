@@ -46,6 +46,8 @@
   box-sizing: border-box;
   @media (max-width: $mobile) {
     padding: 5px 10px 10px 10px;
+    padding-top: 0;
+    padding-bottom: 64px;
   }
 }
 
@@ -93,7 +95,7 @@
   .results-drawer-enter-active,
   .results-drawer-enter-done,
   .results-drawer-appear {
-    height: calc(100dvh - 120px);
+    height: calc(100dvh - 360px);
     transition: height 300ms;
     overflow: hidden;
   }
@@ -105,7 +107,7 @@
 
   .results-drawer-exit-active,
   .results-drawer-exit-done {
-    height: 25px;
+    height: 48px;
     transition: height 300ms;
     overflow: hidden;
   }
@@ -205,6 +207,10 @@
   text-transform: uppercase;
   font-weight: 500;
   word-break: break-word;
+
+  &:first-child {
+    margin-top: 0;
+  }
 
   img {
     height: 40px;
@@ -361,7 +367,9 @@
   cursor: pointer;
   z-index: 55;
   background-color: $ui-white;
-  padding: 5px 5px 5px 10px;
+  padding: 12px;
+  padding-left: 16px;
+  font-size: 18px;
 }
 
 .drawer-open {
@@ -409,6 +417,7 @@
   display: flex;
   justify-content: space-around;
   margin-bottom: 10px;
+  padding-bottom: 10px;
 
   div:nth-child(even) {
     font-weight: bold;
@@ -424,4 +433,8 @@
   div:nth-child(odd):active {
     transform: translateY(1px);
   }
+}
+
+.VictoryContainer {
+  touch-action: auto !important;
 }
