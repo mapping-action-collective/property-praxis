@@ -366,7 +366,7 @@ async function queryMapboxAPI({ coordinates, place, mbQueryType }) {
     switch (mbQueryType) {
       case GEOCODE:
         const queryParams = new URLSearchParams({
-          // autocomplete: "true", TODO: Is this right?
+          autocomplete: "true",
           fuzzyMatch: "true",
           country: "US",
           bbox: [-83.287959, 42.25519197, -82.91043917, 42.45023198].join(","),
@@ -377,10 +377,13 @@ async function queryMapboxAPI({ coordinates, place, mbQueryType }) {
         console.log(`MBAPIRequest: ${APIRequest}`)
         mbResponse = await fetch(APIRequest)
         mbJSON = await mbResponse.json()
-        const mb = mbJSON.features.map(({ place_name, geometry }) => ({
-          place_name,
-          geometry, //contains the coordinates
-        }))
+        // Filter for Detroit addresses, simplify that part of string
+        const mb = mbJSON.features
+          .filter(({ place_name }) => place_name.includes(", Detroit, "))
+          .map(({ place_name, geometry }) => ({
+            place_name: place_name.split(", Detroit, ")[0],
+            geometry,
+          }))
         return { data: mb }
 
       case REVERSE_GEOCODE:
