@@ -58,8 +58,9 @@ export function coordsFromWKT(wkt) {
   }
 }
 
-// TODO: Build in configurability here
 export function getTileLayer(layer, year) {
-  // import.meta.env.VITE_TILE_URL_BASE ?? `https://property-praxis-dev-assets.s3.amazonaws.com/tiles`
-  return `https://property-praxis-prod-assets.s3.amazonaws.com/tiles/${layer}-${year}/{z}/{x}/{y}.pbf`
+  const baseUrl =
+    import.meta.env.VITE_TILE_URL_BASE ??
+    `https://property-praxis-prod-assets.s3.amazonaws.com/tiles`
+  return `${baseUrl}/${layer}-${year}/{z}/{x}/{y}.pbf`
 }

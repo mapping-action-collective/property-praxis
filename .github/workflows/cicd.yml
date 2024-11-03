@@ -106,6 +106,8 @@ jobs:
           S3_BUCKET: property-praxis-${{ env.DEPLOY_ENV }}-assets
           VITE_PUBLIC_URL: https://propertypraxis.com
           VITE_BASE_URL: ""
+          VITE_TILE_URL_BASE: https://property-praxis-${{ env.DEPLOY_ENV }}-assets.s3.amazonaws.com/tiles
+          NODE_ENV: production
         run: |
           npm ci --prefer-offline --no-audit --no-optional
           npm run build
