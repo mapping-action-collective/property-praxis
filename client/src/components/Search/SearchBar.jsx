@@ -198,6 +198,7 @@ class SearchBar extends Component {
         contentIsVisible: false,
       })
     )
+    this.props.router?.navigate(`/map`)
   }
 
   _handleYearSelect = (e) => {
