@@ -259,7 +259,6 @@ class PraxisMap extends Component {
   _renderTooltip() {
     // TODO: Move to use mapbox native tooltip, performance on this is too rough
     const { hoveredFeature, x, y } = this.props.currentFeature
-    console.log(hoveredFeature)
 
     return (
       hoveredFeature && (

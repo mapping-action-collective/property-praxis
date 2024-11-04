@@ -57,7 +57,7 @@ function useSpeculationByCode(results, { code, year }) {
           const ids = results
             .map((record) => {
               if (record.properties.own_id === item.own_id) {
-                return record.properties.prop_id
+                return record.properties.feature_id
               } else {
                 return null
               }

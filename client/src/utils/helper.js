@@ -64,7 +64,7 @@ export function createFilterFromParams(params) {
     layerFilter = [...layerFilter, ["==", "own_id", params.ownid.toUpperCase()]]
   }
   if (params.code) {
-    layerFilter = [...layerFilter, ["==", "zipcode_sj", params.code]]
+    layerFilter = [...layerFilter, ["==", "propzip", params.code]]
   }
   if (layerFilter.length > 0) {
     return ["all", ...layerFilter]

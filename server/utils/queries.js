@@ -19,7 +19,6 @@ const SPECULATORS_BY_CODE = "SPECULATORS_BY_CODE"
 const CODES_BY_SPECULATOR = "CODES_BY_SPECULATOR"
 const POINT_CODE = "POINT_CODE" // get the zipcode for a specific point
 const SPECULATION_BY_CODE = "SPECULATION_BY_CODE"
-const SPECULATION_BY_OWNID = "SPECULATION_BY_OWNID"
 const SPECULATOR_BY_YEAR = "SPECULATOR_BY_YEAR" //graph data
 const ZIPCODE_PARCEL_COUNT = "ZIPCODE_PARCEL_COUNT"
 
@@ -51,19 +50,15 @@ async function queryPGDB({
     /* eslint-disable no-case-declarations */
     switch (PGDBQueryType) {
       case PRIMARY_ZIPCODE:
-        query = SQL`SELECT DISTINCT p.zipcode_sj AS propzip, AVG(oc.count) as avg_count
-          FROM property as p
-          INNER JOIN taxpayer_property AS tpp ON p.prop_id = tpp.prop_id
-          INNER JOIN year AS y ON tpp.taxparprop_id = y.taxparprop_id
-          INNER JOIN taxpayer as tp ON tpp.tp_id = tp.tp_id
-          INNER JOIN owner_taxpayer AS otp ON tp.owntax_id = otp.owntax_id
-          INNER JOIN owner_count as OC ON otp.own_id = oc.own_id
-          WHERE p.zipcode_sj LIKE ${zipMatch} 
-          AND y.year = ${year}
-          GROUP BY  p.zipcode_sj
+        query = SQL`
+          SELECT DISTINCT p.propzip AS propzip,
+          AVG(p.count) AS avg_count
+          FROM parcels AS p
+          WHERE p.propzip = ${code}
+          AND p.year = ${year}
+          GROUP BY p.propzip
           ORDER BY avg_count DESC
-          LIMIT 5;
-          `
+          LIMIT 5;`
         break
 
       case PRIMARY_SPECULATOR:
@@ -105,7 +100,7 @@ async function queryPGDB({
             INNER JOIN zips_geom AS z ON p.propzip = z.zipcode
             WHERE p.year = ${year}`
         if (code) {
-          query.append(SQL` AND p.propzip LIKE ${zipMatch}`)
+          query.append(SQL` AND p.propzip = ${code}`)
         }
         if (ownid) {
           query.append(SQL` AND p.own_id LIKE ${ownIdMatch}`)
@@ -123,7 +118,7 @@ async function queryPGDB({
         break
 
       case GEOJSON_PARCELS_CODE:
-        query = SQL`SELECT COUNT(*) FROM parcels WHERE year = ${year} AND propzip LIKE ${zipMatch};`
+        query = SQL`SELECT COUNT(*) FROM parcels WHERE year = ${year} AND propzip = ${code};`
         break
 
       case GEOJSON_PARCELS_OWNID:
@@ -145,7 +140,7 @@ async function queryPGDB({
               FROM (
                 SELECT * FROM parcels
                 WHERE year = ${year}
-                AND propzip LIKE ${zipMatch}
+                AND propzip = ${code}
                 AND own_id LIKE ${ownIdMatch}
               ) inputs
             ) features;`
@@ -181,9 +176,7 @@ async function queryPGDB({
             saleprice,
             totsqft,
             totacres,
-            cityrbuilt,
             resyrbuilt,
-            prop_id,
             year,
             propaddr,
             own_id,
@@ -237,102 +230,60 @@ async function queryPGDB({
 
       // all the years in the DB to search
       case AVAILABLE_PRAXIS_YEARS:
-        query = SQL`SELECT DISTINCT year FROM year 
+        query = SQL`SELECT DISTINCT year FROM parcels 
           ORDER BY year DESC;`
         break
 
       case SPECULATORS_BY_CODE:
-        query = SQL`SELECT DISTINCT otp.own_id, oc.count
-        FROM property as p
-        INNER JOIN taxpayer_property AS tpp ON p.prop_id = tpp.prop_id
-        INNER JOIN taxpayer as tp ON tpp.tp_id = tp.tp_id
-        INNER JOIN owner_taxpayer AS otp ON tp.owntax_id = otp.owntax_id
-        INNER JOIN owner_count as OC ON otp.own_id = oc.own_id
-        WHERE p.zipcode_sj LIKE ${zipMatch}
-        AND p.year = ${year}
-        AND oc.year = ${year}
-        ORDER BY oc.count DESC
-        LIMIT 5
-        `
+        query = SQL`SELECT DISTINCT p.own_id, COUNT(*) AS count
+        FROM parcels AS p
+        WHERE p.propzip = ${code} AND p.year = ${year}
+        GROUP BY p.own_id
+        ORDER BY count DESC
+        LIMIT 5`
         break
 
       case CODES_BY_SPECULATOR:
-        query = SQL`SELECT DISTINCT p.zipcode_sj AS propzip,
-          STRING_AGG(DISTINCT ot.own_id, ',') AS own_id, COUNT(ot.own_id) AS count
-          FROM parcel_property_geom AS ppg
-          INNER JOIN property AS p ON ppg.prop_id = p.prop_id
-          INNER JOIN taxpayer_property AS tp ON p.prop_id = tp.prop_id
-          INNER JOIN year AS y on tp.taxparprop_id = y.taxparprop_id
-          INNER JOIN taxpayer AS t ON tp.tp_id = t.tp_id
-          INNER JOIN owner_taxpayer AS ot ON t.owntax_id = ot.owntax_id
-          WHERE ot.own_id LIKE ${ownIdMatch}
-          AND y.year = ${year}
-          AND ppg.year = ${year}
-          GROUP BY p.zipcode_sj, ot.own_id
+        query = SQL`
+          SELECT DISTINCT p.propzip AS propzip,
+          STRING_AGG(DISTINCT p.own_id, ',') AS own_id,
+          COUNT(*) AS count
+          FROM parcels AS p
+          WHERE p.own_id LIKE ${ownIdMatch}
+          AND p.year = ${year}
+          GROUP BY p.propzip, p.own_id
           ORDER BY count DESC;
         `
         break
 
       case SPECULATION_BY_CODE:
         /*Query to  get the rate of speculation in a zipcode.*/
-        query = SQL`SELECT y.own_id, y.count, y.total,
-        (y.count::float / y.total::float) * 100 AS per
-         FROM 
-        (SELECT SUM(x.count)::INT as count, x.own_id as own_id, x.total
-          FROM
-            (SELECT DISTINCT own_id, COUNT(own_id)::INT as count,
-            (SELECT COUNT(feature_id) FROM parcels
-            WHERE year = ${year} AND propzip LIKE ${zipMatch})::INT AS total 
-            FROM parcels
-            WHERE year = ${year}
-            AND propzip LIKE ${zipMatch}
-            GROUP BY own_id) x
-          GROUP BY own_id, total
-          ORDER BY count DESC ) y;`
-
-        break
-
-      case SPECULATION_BY_OWNID:
-        /*Search speculation by own_id in each zipcode.*/
-        query = SQL`SELECT DISTINCT 
-        x.own_id, x.count::int, x.propzip, y.total::int,
-        (x.count::float / y.total::float) * 100 AS per
-        FROM (
-          SELECT DISTINCT COUNT(ppg1.parprop_id) AS count, 
-          ot1.own_id AS own_id, p1.zipcode_sj AS propzip
-          FROM parcel_property_geom AS ppg1
-          INNER JOIN property AS p1 ON ppg1.prop_id = p1.prop_id
-          INNER JOIN taxpayer_property AS tp1 ON p1.prop_id = tp1.prop_id
-          INNER JOIN year AS y1 on tp1.taxparprop_id = y1.taxparprop_id
-          INNER JOIN taxpayer AS t1 ON tp1.tp_id = t1.tp_id
-          INNER JOIN owner_taxpayer AS ot1 ON t1.owntax_id = ot1.owntax_id
-          WHERE ppg1.year = ${year}
-          AND ot1.own_id LIKE ${ownIdMatch}
-          AND y1.year = ${year}
-          GROUP BY ot1.own_id, p1.zipcode_sj
-        ) x 
+        query = SQL`SELECT
+          p.own_id,
+          COUNT(*) AS count,
+          COUNT(*) AS total,
+          ROUND(100.0 * COUNT(*) / spec.total_zip_count, 2) AS per
+        FROM parcels p
         INNER JOIN (
-          SELECT DISTINCT COUNT(ppg2.parprop_id) AS total, 
-          p2.zipcode_sj AS propzip
-          FROM parcel_property_geom AS ppg2
-          INNER JOIN property AS p2 ON ppg2.prop_id = p2.prop_id
-          INNER JOIN taxpayer_property AS tp2 ON p2.prop_id = tp2.prop_id
-          INNER JOIN year AS y2 on tp2.taxparprop_id = y2.taxparprop_id
-          INNER JOIN taxpayer AS t2 ON tp2.tp_id = t2.tp_id
-          INNER JOIN owner_taxpayer AS ot2 ON t2.owntax_id = ot2.owntax_id
-          AND y2.year = ${year}
-          WHERE ppg2.year = ${year}
-          GROUP BY p2.zipcode_sj
-          ) y ON x.propzip = y.propzip
-          ORDER BY propzip, own_id, count;`
+          SELECT propzip, COUNT(*) AS total_zip_count
+          FROM parcels
+          WHERE year = ${year}
+          GROUP BY propzip
+        ) spec ON p.propzip = spec.propzip
+        WHERE
+          p.year = ${year}
+          AND p.propzip = ${code}
+        GROUP BY p.own_id, spec.total_zip_count
+        ORDER BY total DESC
+        LIMIT 10;`
         break
 
       case SPECULATOR_BY_YEAR:
         /*Search property count by own_id by year*/
         query = SQL`SELECT year, own_id, count
           FROM owner_count
-          WHERE own_id = ${ownid.toUpperCase()}`
-
+          WHERE own_id = ${ownid.toUpperCase()}
+          ORDER BY year ASC`
         break
 
       default:
@@ -416,7 +367,6 @@ module.exports = {
   SPECULATORS_BY_CODE,
   CODES_BY_SPECULATOR,
   SPECULATION_BY_CODE,
-  SPECULATION_BY_OWNID,
   SPECULATOR_BY_YEAR,
   ZIPCODE_PARCEL_COUNT,
 }

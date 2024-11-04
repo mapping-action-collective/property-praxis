@@ -37,15 +37,6 @@ router.get("/", async (req, res) => {
       })
 
       clientData = data
-    } else if (type === "speculation-by-ownid") {
-      // TODO: unused
-      const { data } = await queries.queryPGDB({
-        PGDBQueryType: queries.SPECULATION_BY_OWNID,
-        ownid,
-        year,
-      })
-
-      clientData = data
     } else if (type === "speculator-by-year") {
       const { data } = await queries.queryPGDB({
         PGDBQueryType: queries.SPECULATOR_BY_YEAR,
