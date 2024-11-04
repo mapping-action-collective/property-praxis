@@ -3,7 +3,6 @@ import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom"
 import { connect } from "react-redux"
 import { setDocHeightOnWindow } from "../utils/helper"
 import Home from "./pages/Home"
-import DownloadData from "./pages/DownloadData"
 import About from "./pages/About"
 import Methodology from "./pages/Methodology"
 import MapContainer from "./Map/MapContainer"
@@ -35,10 +34,6 @@ const router = createBrowserRouter([
           {
             path: "/map",
             element: <MapContainer />,
-          },
-          {
-            path: "/data",
-            element: <DownloadData />,
           },
           {
             path: "/methodology",

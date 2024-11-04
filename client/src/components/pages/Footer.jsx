@@ -32,9 +32,9 @@ const Footer = () => {
           </div>
           <div className="footer-links">
             <li>
-              <Link to={{ pathname: "/data" }} onClick={() => hideError()}>
+              <a href="https://detroitdata.org/organization/property-praxis">
                 Download Data
-              </Link>
+              </a>
             </li>
 
             <li>
