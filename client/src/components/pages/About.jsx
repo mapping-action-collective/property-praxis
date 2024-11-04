@@ -34,40 +34,16 @@ const About = () => {
             <p>
               What you see on this site are bulk speculative property owners in
               the city of Detroit. It includes the name of owners listed by the
-              City of Detroit Assessors Office. It also includes owner or member
-              names of Limited Liability Companies (LLCs), shell corporations
-              that protect assets and hide identities.
+              City of Detroit Assessors' Office. It also includes owner or
+              member names of Limited Liability Companies (LLCs), shell
+              corporations that protect assets and hide identities.
             </p>
             <p>
               The intent is to offer a more complete understanding of how
               speculative property ownership is actively shaping the conditions
               of Detroit neighborhoods. We hope this information allows
               community groups, activists, and individuals to take a more direct
-              role in shaping the places they live.
-            </p>
-            <p>
-              For further information:
-              <ul>
-                <li>
-                  <a href="mailto:urbanpraxis@umich.edu?subject=Property Praxis">
-                    urbanpraxis@umich.edu
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="https://urbanpraxis.org/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Urbanpraxis.org
-                  </a>
-                </li>
-                <li>
-                  <a href="#" target="_blank" rel="noopener noreferrer">
-                    Detroitography.org
-                  </a>
-                </li>
-              </ul>
+              role in shaping the places where they live.
             </p>
           </div>
         </div>
