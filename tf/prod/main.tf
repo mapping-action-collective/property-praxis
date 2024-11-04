@@ -23,6 +23,7 @@ data "aws_region" "current" {}
 data "aws_caller_identity" "current" {}
 
 locals {
+  domain          = "propertypraxis.org"
   name            = "property-praxis"
   appname         = "propertypraxis"
   env             = "prod"
@@ -123,11 +124,46 @@ module "s3" {
   ]
 }
 
+data "aws_route53_zone" "domain" {
+  name = local.domain
+}
+
+resource "aws_route53_record" "site" {
+  zone_id = data.aws_route53_zone.domain.zone_id
+  name    = "beta.${local.domain}"
+  type    = "A"
+
+  alias {
+    name    = module.cloudfront.cloudfront_distribution_domain_name
+    zone_id = module.cloudfront.cloudfront_distribution_hosted_zone_id
+
+    evaluate_target_health = false
+  }
+}
+
+module "acm" {
+  source  = "terraform-aws-modules/acm/aws"
+  version = "~> 4.0"
+
+  domain_name = local.domain
+  zone_id     = data.aws_route53_zone.domain.zone_id
+
+  validation_method = "DNS"
+
+  subject_alternative_names = [
+    "*.${local.domain}"
+  ]
+
+  wait_for_validation = true
+
+  tags = local.tags
+}
+
 module "cloudfront" {
   source  = "terraform-aws-modules/cloudfront/aws"
   version = "3.2.1"
 
-  # aliases = [local.domain]
+  aliases = ["beta.${local.domain}"]
 
   enabled             = true
   is_ipv6_enabled     = true
@@ -160,29 +196,27 @@ module "cloudfront" {
     allowed_methods        = ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"]
     cached_methods         = ["GET", "HEAD"]
     target_origin_id       = "app"
-    viewer_protocol_policy = "allow-all"
-    # viewer_protocol_policy = "redirect-to-https"
-    compress     = true
-    query_string = true
+    viewer_protocol_policy = "redirect-to-https"
+    compress               = true
+    query_string           = true
   }
 
   ordered_cache_behavior = [
     {
       path_pattern           = "/api/*"
       target_origin_id       = "api"
-      viewer_protocol_policy = "allow-all"
-      # viewer_protocol_policy = "redirect-to-https"
-      allowed_methods = ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"]
-      cached_methods  = ["GET", "HEAD"]
-      compress        = true
-      query_string    = true
+      viewer_protocol_policy = "redirect-to-https"
+      allowed_methods        = ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"]
+      cached_methods         = ["GET", "HEAD"]
+      compress               = true
+      query_string           = true
     }
   ]
 
-  # viewer_certificate = {
-  #   acm_certificate_arn = module.acm.acm_certificate_arn
-  #   ssl_support_method  = "sni-only"
-  # }
+  viewer_certificate = {
+    acm_certificate_arn = module.acm.acm_certificate_arn
+    ssl_support_method  = "sni-only"
+  }
 }
 
 # Use for both environments
