@@ -329,17 +329,9 @@ async function queryPGDB({
 
       case SPECULATOR_BY_YEAR:
         /*Search property count by own_id by year*/
-        query = SQL`SELECT DISTINCT COUNT(ot.own_id),
-          ot.own_id, y.year
-          FROM owner_taxpayer AS ot
-          INNER JOIN taxpayer AS tp
-          ON ot.owntax_id = tp.owntax_id
-          INNER JOIN taxpayer_property AS tpp
-          ON tp.tp_id = tpp.tp_id
-          INNER JOIN year AS y 
-          ON tpp.taxparprop_id = y.taxparprop_id
-          WHERE ot.own_id = ${ownid.toUpperCase()}
-          GROUP BY ot.own_id, y.year`
+        query = SQL`SELECT year, own_id, count
+          FROM owner_count
+          WHERE own_id = ${ownid.toUpperCase()}`
 
         break
 
