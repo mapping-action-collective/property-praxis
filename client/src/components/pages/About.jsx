@@ -34,7 +34,7 @@ const About = () => {
             <p>
               What you see on this site are bulk speculative property owners in
               the city of Detroit. It includes the name of owners listed by the
-              City of Detroit Assessors' Office. It also includes owner or
+              City of Detroit Assessors&apos; Office. It also includes owner or
               member names of Limited Liability Companies (LLCs), shell
               corporations that protect assets and hide identities.
             </p>
