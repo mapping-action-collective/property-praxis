@@ -102,6 +102,15 @@ class SearchBar extends Component {
     const searchTerm = e.target.value
     const { searchType, searchYear } = this.props.searchState.searchParams
 
+    if (window.gtag) {
+      // TODO: Update to be selected one
+      window.gtag("event", "search", {
+        search_term: searchTerm,
+        search_category: searchType,
+        search_year: searchYear,
+      })
+    }
+
     this.props.dispatch(updateSearchParams({ searchTerm }))
 
     this._handleQueryPrimaryResults({

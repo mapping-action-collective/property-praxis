@@ -1,9 +1,14 @@
-import React from "react"
+import React, { useEffect } from "react"
 import Footer from "./Footer"
 import TopContainer from "./TopContainer"
 import nounAbout from "../../assets/img/noun_about.svg"
+import { trackPage } from "../../utils/analytics"
 
 const About = () => {
+  useEffect(() => {
+    trackPage()
+  }, [])
+
   return (
     <main>
       <div className="page-container">

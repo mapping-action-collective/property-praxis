@@ -43,6 +43,7 @@ import {
   parcelStop6,
   parcelStop7,
 } from "../../utils/colors"
+import { trackPage } from "../../utils/analytics"
 
 /*This API token works for propertypraxis.org  */
 const MAPBOX_TOKEN =
@@ -314,6 +315,7 @@ class PraxisMap extends Component {
   }
 
   componentDidMount() {
+    trackPage()
     this._getMapData()
   }
 

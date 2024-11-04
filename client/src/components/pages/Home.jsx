@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useEffect } from "react"
 import { connect } from "react-redux"
 import PropTypes from "prop-types"
 import SearchBar from "../Search/SearchBar"
@@ -7,8 +7,13 @@ import nounMarketingRealEstate2 from "../../assets/img/noun_marketing_real estat
 import nounMarketingRealEstate from "../../assets/img/noun_marketing_real_estate.svg"
 import nounLandlordTenant from "../../assets/img/noun_Landlord_Tenant.svg"
 import logoTransparent from "../../assets/img/pp_logo_transparent.png"
+import { trackPage } from "../../utils/analytics"
 
 const Home = (props) => {
+  useEffect(() => {
+    trackPage()
+  }, [])
+
   return (
     <main className="page-container">
       <div className="header-container">
