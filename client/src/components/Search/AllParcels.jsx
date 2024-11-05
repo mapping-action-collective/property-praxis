@@ -78,7 +78,7 @@ function AllParcels(props) {
             <span>Top 10 Speculators</span>
           </div>
           <div className="detailed-zipcode">
-            {topSpeculators.slice(0, 10).map((record, index) => {
+            {topSpeculators.slice(0, 10).map((record) => {
               return (
                 <div className="speculator-item" key={record.own_id}>
                   <div>
