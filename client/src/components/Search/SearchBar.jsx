@@ -203,11 +203,9 @@ class SearchBar extends Component {
       updateDetailedSearch({
         results: null,
         resultsType: null,
-        drawerIsOpen: false,
-        contentIsVisible: false,
       })
     )
-    this.props.router?.navigate(`/map`)
+    this.props.router?.navigate(`/map?`)
   }
 
   _handleYearSelect = (e) => {

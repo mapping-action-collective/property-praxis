@@ -5,6 +5,7 @@ import {
   UPDATE_PRIMARY_SEARCH,
   UPDATE_DETAILED_SEARCH,
   UPDATE_SEARCH_BAR,
+  UPDATE_ALL_TOTALS,
 } from "../actions/search"
 import { DEFAULT_YEAR } from "../utils/constants"
 
@@ -27,6 +28,12 @@ const initialSearchState = {
     resultsCount: null,
     resultsType: null,
     recordYears: null,
+  },
+  allTotals: {
+    timelineData: [],
+    totalSpeculators: null,
+    totalParcels: null,
+    topSpeculators: [],
   },
   downloadData: null,
   viewerCoords: {
@@ -71,6 +78,16 @@ export default function searchState(state = initialSearchState, action) {
       return {
         ...state,
         detailedSearch: { ...state.detailedSearch, ...action.payload },
+      }
+    case UPDATE_ALL_TOTALS:
+      return {
+        ...state,
+        allTotals: { ...state.allTotals, ...action.payload },
+        detailedSearch: {
+          ...state.detailedSearch,
+          contentIsVisible: true,
+          drawerIsOpen: true,
+        },
       }
     default:
       return state

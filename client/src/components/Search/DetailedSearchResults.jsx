@@ -17,6 +17,7 @@ import {
 } from "../../utils/helper"
 import MapViewerV4 from "./MapViewerV4"
 import TimeGraph from "./TimeGraph"
+import AllParcels from "./AllParcels"
 import infoIcon from "../../assets/img/info-icon.png"
 import { APISearchQueryFromRoute } from "../../utils/api"
 import mapMarkerRose from "../../assets/img/map_marker_rose.svg"
@@ -296,7 +297,7 @@ function ContentSwitch({ detailsType, queryParams }) {
   } else if (results && results.length === 0) {
     return <NoResults />
   } else {
-    return <div>ERROR</div>
+    return <AllParcels queryParams={queryParams} />
   }
 }
 

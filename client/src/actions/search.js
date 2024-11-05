@@ -13,6 +13,7 @@ export const UPDATE_DETAILED_SEARCH = "UPDATE_DETAILED_SEARCH"
 export const UPDATE_SEARCH_BAR = "UPDATE_SEARCH_BAR"
 export const UPDATE_VIEWER_POSITION = "UPDATE_VIEWER_POSITION"
 export const GET_DOWNLOAD_DATA = "GET_DOWNLOAD_DATA"
+export const UPDATE_ALL_TOTALS = "UPDATE_ALL_TOTALS"
 
 /* General action to set search state
 use this sparingly as the action
@@ -53,6 +54,13 @@ function getViewerPosition(viewerCoords) {
   return {
     type: UPDATE_VIEWER_POSITION,
     payload: { ...viewerCoords },
+  }
+}
+
+function updateAllTotals(allTotals) {
+  return {
+    type: UPDATE_ALL_TOTALS,
+    payload: { ...allTotals },
   }
 }
 
@@ -170,6 +178,38 @@ export function handleGetViewerPosition(coords) {
       dispatch(triggerFetchError(true))
       console.error(
         `An error occured fetching viewer position. Message: ${err}`
+      )
+    }
+  }
+}
+
+export function handleAllTotalsQuery(year) {
+  return async (dispatch) => {
+    try {
+      const res = await APISearchQueryFromRoute(
+        `/api/general?type=all-totals&year=${year}`
+      )
+      const yearRecord = res.speculationByYear.find(
+        ({ year: recYear }) => +year == recYear
+      )
+
+      dispatch(
+        updateAllTotals({
+          timelineData: res.speculationByYear
+            .map(({ year: recYear, count }) => ({
+              x: +recYear,
+              y: +count,
+            }))
+            .sort((a, b) => a.recYear - b.recYear),
+          totalSpeculators: +yearRecord.speculator_count,
+          totalParcels: +yearRecord.count,
+          topSpeculators: res.topSpeculators,
+        })
+      )
+    } catch (err) {
+      dispatch(triggerFetchError(true))
+      console.error(
+        `An error occured searching search bar years.  Message: ${err}`
       )
     }
   }

@@ -3,9 +3,13 @@ import { useSelector, useDispatch } from "react-redux"
 import { withRouter } from "../../utils/router"
 import { CSSTransition } from "react-transition-group"
 import queryString from "query-string"
-import { updateDetailedSearch } from "../../actions/search"
+import {
+  handleAllTotalsQuery,
+  updateDetailedSearch,
+} from "../../actions/search"
 import { getDetailsFromGeoJSON } from "../../utils/helper"
 import DetailedSearchResults from "./DetailedSearchResults"
+import { DEFAULT_YEAR } from "../../utils/constants"
 
 function useQueryParams(props) {
   const { searchQuery } = props
@@ -22,8 +26,11 @@ function useQueryParams(props) {
 
 function DetailedResultsContainer() {
   const { ppraxis } = useSelector((state) => state.mapData)
-  const { drawerIsOpen, results, resultsType } = useSelector(
+  const { drawerIsOpen, resultsType } = useSelector(
     (state) => state.searchState.detailedSearch
+  )
+  const { totalSpeculators } = useSelector(
+    (state) => state.searchState.allTotals
   )
   const { details, detailsCount, detailsZip, detailsType } =
     getDetailsFromGeoJSON(ppraxis)
@@ -31,17 +38,21 @@ function DetailedResultsContainer() {
 
   const queryParams = useQueryParams({ searchQuery: window.location.search })
   useEffect(() => {
-    dispatch(
-      updateDetailedSearch({
-        results: details,
-        resultsZip: detailsZip,
-        resultsCount: detailsCount,
-        resultsType: detailsType,
-      })
-    )
+    if (!resultsType && !totalSpeculators) {
+      dispatch(handleAllTotalsQuery(queryParams?.year || DEFAULT_YEAR))
+    } else {
+      dispatch(
+        updateDetailedSearch({
+          results: details,
+          resultsZip: detailsZip,
+          resultsCount: detailsCount,
+          resultsType: detailsType,
+        })
+      )
+    }
   }, [JSON.stringify(details), detailsZip, detailsCount, detailsType])
 
-  if (results && resultsType && queryParams) {
+  if (resultsType || totalSpeculators) {
     return (
       <CSSTransition
         in={drawerIsOpen} //set false on load
@@ -64,7 +75,7 @@ function DetailedResultsContainer() {
         }
       >
         <DetailedSearchResults
-          detailsType={detailsType}
+          detailsType={!resultsType ? null : detailsType}
           queryParams={queryParams}
         />
       </CSSTransition>
