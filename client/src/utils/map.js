@@ -24,7 +24,7 @@ export function createNewViewport(geojson, mapRef) {
   }
 
   // create the appropriate
-  if (features && featureCount > 0) {
+  if ((features && featureCount > 0) || geojson.geometry?.type !== "Point") {
     const [minLng, minLat, maxLng, maxLat] = bbox(geojson)
     mapRef.current.fitBounds(
       [
@@ -33,6 +33,7 @@ export function createNewViewport(geojson, mapRef) {
       ],
       {
         padding: 40,
+        maxZoom: 15,
       }
     )
   } else if (geojson.geometry && geojson.geometry.type === "Point") {

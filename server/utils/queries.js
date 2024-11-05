@@ -188,7 +188,7 @@ async function queryPGDB({
             propdir,
             propzip,
             ST_AsText(centroid) AS centroid,
-            ST_AsGeoJSON(centroid, 6)::json AS geometry,
+            ST_AsGeoJSON(geom, 6)::json AS geometry,
             ST_Distance(
               ST_SetSRID(
                 ST_MakePoint(${longitude}, ${latitude}),
