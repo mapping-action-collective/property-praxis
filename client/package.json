@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "VITE_PUBLIC_URL=\"\" vite --host",
-    "build": "VITE_PUBLIC_URL=\"\" vite build",
+    "build": "vite build",
     "lint": "eslint \"./src/**/*.{js,jsx,ts}\"",
     "lint:fix": "eslint --quiet --fix \"./src/**/*.{js,jsx,ts}\"",
     "prettier": "prettier --check \"./src/**/*.{js,jsx,css}\"",
