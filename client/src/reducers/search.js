@@ -31,8 +31,6 @@ const initialSearchState = {
   },
   allTotals: {
     timelineData: [],
-    totalSpeculators: null,
-    totalParcels: null,
     topSpeculators: [],
   },
   downloadData: null,

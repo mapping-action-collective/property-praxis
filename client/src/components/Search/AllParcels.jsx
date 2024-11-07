@@ -20,11 +20,20 @@ import infoIcon from "../../assets/img/info-icon.png"
 
 function AllParcels(props) {
   const year = props.queryParams?.year || DEFAULT_YEAR
-  const { timelineData, totalSpeculators, totalParcels, topSpeculators } =
-    useSelector((state) => state.searchState.allTotals)
+  const { timelineData, topSpeculators } = useSelector(
+    (state) => state.searchState.allTotals
+  )
   const { drawerIsOpen } = useSelector(
     (state) => state.searchState.detailedSearch
   )
+
+  const yearRecord = timelineData.find(
+    ({ year: recYear }) => +year === +recYear
+  )
+  if (!yearRecord) {
+    return
+  }
+  const { speculator_count: totalSpeculators, count: totalParcels } = yearRecord
 
   return (
     totalSpeculators && (

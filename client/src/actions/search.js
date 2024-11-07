@@ -196,13 +196,12 @@ export function handleAllTotalsQuery(year) {
       dispatch(
         updateAllTotals({
           timelineData: res.speculationByYear
-            .map(({ year: recYear, count }) => ({
-              x: +recYear,
-              y: +count,
+            .map((rec) => ({
+              ...rec,
+              x: +rec.year,
+              y: +rec.count,
             }))
-            .sort((a, b) => a.recYear - b.recYear),
-          totalSpeculators: +yearRecord.speculator_count,
-          totalParcels: +yearRecord.count,
+            .sort((a, b) => a.year - b.year),
           topSpeculators: res.topSpeculators,
         })
       )

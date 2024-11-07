@@ -29,16 +29,14 @@ function DetailedResultsContainer() {
   const { drawerIsOpen, resultsType } = useSelector(
     (state) => state.searchState.detailedSearch
   )
-  const { totalSpeculators } = useSelector(
-    (state) => state.searchState.allTotals
-  )
+  const { timelineData } = useSelector((state) => state.searchState.allTotals)
   const { details, detailsCount, detailsZip, detailsType } =
     getDetailsFromGeoJSON(ppraxis)
   const dispatch = useDispatch()
 
   const queryParams = useQueryParams({ searchQuery: window.location.search })
   useEffect(() => {
-    if (!resultsType && !totalSpeculators) {
+    if (!resultsType && timelineData.length === 0) {
       dispatch(handleAllTotalsQuery(queryParams?.year || DEFAULT_YEAR))
     } else {
       dispatch(
@@ -52,7 +50,7 @@ function DetailedResultsContainer() {
     }
   }, [JSON.stringify(details), detailsZip, detailsCount, detailsType])
 
-  if (resultsType || totalSpeculators) {
+  if (resultsType || timelineData.length > 0) {
     return (
       <CSSTransition
         in={drawerIsOpen} //set false on load
