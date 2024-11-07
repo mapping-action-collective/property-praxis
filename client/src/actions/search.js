@@ -189,9 +189,6 @@ export function handleAllTotalsQuery(year) {
       const res = await APISearchQueryFromRoute(
         `/api/general?type=all-totals&year=${year}`
       )
-      const yearRecord = res.speculationByYear.find(
-        ({ year: recYear }) => +year == recYear
-      )
 
       dispatch(
         updateAllTotals({
