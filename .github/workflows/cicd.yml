@@ -104,7 +104,7 @@ jobs:
         working-directory: client
         env:
           S3_BUCKET: property-praxis-${{ env.DEPLOY_ENV }}-assets
-          VITE_PUBLIC_URL: https://propertypraxis.com
+          VITE_PUBLIC_URL: https://beta.propertypraxis.org
           VITE_BASE_URL: ""
           VITE_TILE_URL_BASE: https://property-praxis-${{ env.DEPLOY_ENV }}-assets.s3.amazonaws.com/tiles
         run: |
