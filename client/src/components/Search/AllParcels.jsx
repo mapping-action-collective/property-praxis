@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useEffect } from "react"
 import { useSelector } from "react-redux"
 import { Link } from "react-router-dom"
 import {
@@ -17,9 +17,19 @@ import { DEFAULT_YEAR, MINIMUM_YEAR } from "../../utils/constants"
 import questionMarkRose from "../../assets/img/question_mark_rose.svg"
 import mapMarkerRose from "../../assets/img/map_marker_rose.svg"
 import infoIcon from "../../assets/img/info-icon.png"
+import { useDispatch } from "react-redux"
+import { handleAllTotalsQuery } from "../../actions/search"
 
 function AllParcels(props) {
   const year = props.queryParams?.year || DEFAULT_YEAR
+
+  const dispatch = useDispatch()
+  useEffect(() => {
+    if (props.queryParams?.year) {
+      dispatch(handleAllTotalsQuery(props.queryParams.year))
+    }
+  }, [props.queryParams?.year])
+
   const { timelineData, topSpeculators } = useSelector(
     (state) => state.searchState.allTotals
   )
