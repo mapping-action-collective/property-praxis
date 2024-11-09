@@ -599,7 +599,7 @@ function SingleParcel(props) {
             Detroit zip code <span>{propzip}</span>, and was one of{" "}
             <span>{count}</span> properties owned by speculator{" "}
             <span>{capitalizeFirstLetter(own_id)}</span>. Additional years of
-            speculation for this property ocurred in{" "}
+            speculation for this property occurred in{" "}
             <span>
               {praxisRecordYears ? praxisRecordYears.join(", ") : null}
             </span>

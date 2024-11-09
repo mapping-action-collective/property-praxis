@@ -256,24 +256,10 @@ class PraxisMap extends Component {
     )
   }
 
-  _renderTooltip() {
-    // TODO: Move to use mapbox native tooltip, performance on this is too rough
-    const { hoveredFeature, x, y } = this.props.currentFeature
-
-    return (
-      hoveredFeature && (
-        <div className="tooltip" style={{ left: x, top: y }}>
-          <div>{hoveredFeature.properties.propaddr}</div>
-          <div>Speculator: {hoveredFeature.properties.own_id}</div>
-          <div>Properties owned: {hoveredFeature.properties.count}</div>
-        </div>
-      )
-    )
-  }
-
   _removeTooltip() {
     this.props.dispatch(getHoveredFeatureAction(null))
   }
+
   // add a new marker if user clicks on a parcel feature
   // nothing happens if there is no feature
   _handleMapClick = async (event) => {
@@ -442,6 +428,7 @@ class PraxisMap extends Component {
               <div className="tooltip">
                 <div>{hoveredFeature.properties.propaddr}</div>
                 <div>Speculator: {hoveredFeature.properties.own_id}</div>
+                <div>Taxpayer: {hoveredFeature.properties.taxpayer}</div>
                 <div>
                   Properties owned: {hoveredFeature.properties.own_count}
                 </div>
