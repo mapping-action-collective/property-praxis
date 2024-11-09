@@ -130,7 +130,20 @@ data "aws_route53_zone" "domain" {
 
 resource "aws_route53_record" "site" {
   zone_id = data.aws_route53_zone.domain.zone_id
-  name    = "beta.${local.domain}"
+  name    = local.domain
+  type    = "A"
+
+  alias {
+    name    = module.cloudfront.cloudfront_distribution_domain_name
+    zone_id = module.cloudfront.cloudfront_distribution_hosted_zone_id
+
+    evaluate_target_health = false
+  }
+}
+
+resource "aws_route53_record" "site_www" {
+  zone_id = data.aws_route53_zone.domain.zone_id
+  name    = "www.${local.domain}"
   type    = "A"
 
   alias {
@@ -163,7 +176,7 @@ module "cloudfront" {
   source  = "terraform-aws-modules/cloudfront/aws"
   version = "3.2.1"
 
-  aliases = ["beta.${local.domain}"]
+  aliases = [local.domain, "www.${local.domain}"]
 
   enabled             = true
   is_ipv6_enabled     = true
