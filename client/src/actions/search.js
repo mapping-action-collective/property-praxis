@@ -43,13 +43,6 @@ export function updateDetailedSearch(detailedSearch) {
   }
 }
 
-function updateSearchBar(searchBar) {
-  return {
-    type: UPDATE_SEARCH_BAR,
-    payload: { ...searchBar },
-  }
-}
-
 function getViewerPosition(viewerCoords) {
   return {
     type: UPDATE_VIEWER_POSITION,
