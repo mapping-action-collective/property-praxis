@@ -57,12 +57,6 @@ router.get("/", async (req, res) => {
     const { type = null, year = null, code = null } = req.query
     let pgData, clientData
     switch (type) {
-      case "available-praxis-years":
-        pgData = await queries.queryPGDB({
-          PGDBQueryType: queries.AVAILABLE_PRAXIS_YEARS,
-        })
-        clientData = pgData.data
-        break
       case "codes-by-speculator":
         pgData = await queries.queryPGDB({
           PGDBQueryType: queries.ZIPCODE_PARCEL_COUNT,

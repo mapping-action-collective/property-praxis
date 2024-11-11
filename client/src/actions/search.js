@@ -134,21 +134,6 @@ export function handleDetailedSearchQuery(
   }
 }
 
-export function handleSearchBarYearsAction(route) {
-  return async (dispatch) => {
-    try {
-      const json = await APISearchQueryFromRoute(route)
-      dispatch(updateSearchBar({ searchYears: json }))
-      return json
-    } catch (err) {
-      dispatch(triggerFetchError(true))
-      console.error(
-        `An error occured searching search bar years.  Message: ${err}`
-      )
-    }
-  }
-}
-
 export function handleGetPraxisYearsAction(route) {
   return async (dispatch) => {
     try {

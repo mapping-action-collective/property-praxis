@@ -7,11 +7,11 @@ import {
   UPDATE_SEARCH_BAR,
   UPDATE_ALL_TOTALS,
 } from "../actions/search"
-import { DEFAULT_YEAR } from "../utils/constants"
+import { DEFAULT_YEAR, YEARS } from "../utils/constants"
 
 const initialSearchState = {
   searchBar: {
-    searchYears: null,
+    searchYears: YEARS.map((year) => ({ year })),
   },
   searchParams: {
     searchType: "all",

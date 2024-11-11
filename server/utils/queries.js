@@ -14,7 +14,6 @@ const GEOJSON_PARCELS_OWNID = "GEOJSON_PARCELS_OWNID"
 const GEOJSON_PARCELS_OWNID_CODE = "GEOJSON_PARCELS_OWNID_CODE"
 const GEOJSON_PARCELS_CODE_DISTANCE = "GEOJSON_PARCELS_CODE_DISTANCE"
 const DETAILED_RECORD_YEARS = "DETAILED_RECORD_YEARS" // years for a praxis record
-const AVAILABLE_PRAXIS_YEARS = "AVAILABLE_PRAXIS_YEARS" // all the available search years
 const SPECULATORS_BY_CODE = "SPECULATORS_BY_CODE"
 const CODES_BY_SPECULATOR = "CODES_BY_SPECULATOR"
 const POINT_CODE = "POINT_CODE" // get the zipcode for a specific point
@@ -228,12 +227,6 @@ async function queryPGDB({
           WHERE parcelno = ${parcelno}`
         break
 
-      // all the years in the DB to search
-      case AVAILABLE_PRAXIS_YEARS:
-        query = SQL`SELECT DISTINCT year FROM parcels 
-          ORDER BY year DESC;`
-        break
-
       case SPECULATORS_BY_CODE:
         query = SQL`SELECT DISTINCT p.own_id, COUNT(*) AS count
         FROM parcels AS p
@@ -361,7 +354,6 @@ module.exports = {
   GEOJSON_PARCELS_CODE_DISTANCE,
   POINT_CODE,
   DETAILED_RECORD_YEARS,
-  AVAILABLE_PRAXIS_YEARS,
   GEOCODE,
   REVERSE_GEOCODE,
   SPECULATORS_BY_CODE,
